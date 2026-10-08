@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import math
 
 face_detector = mp.tasks.vision.FaceDetector.create_from_model_path(
     "models/blaze_face_short_range.tflite"
@@ -12,8 +13,15 @@ face_landmarker = mp.tasks.vision.FaceLandmarker.create_from_model_path(
 camera = cv2.VideoCapture(0)
 
 # landmarks para representar os olhos
-LEFT_EYE = [33, 133, 159, 145]
-RIGHT_EYE = [362, 263, 386, 374]
+LEFT_EYE = [33, 133, 159, 145, 158, 153]
+RIGHT_EYE = [362, 263, 386, 374, 385, 380]
+
+# calcula distancia entre 2 landmarks
+def calculate_distance(point1, point2):
+    return math.sqrt(
+        (point1.x - point2.x) ** 2 +
+        (point1.y - point2.y) ** 2
+    )
 
 while True:
     success, frame = camera.read()
@@ -31,10 +39,60 @@ while True:
     )
 
     landmarker_result = face_landmarker.detect(mp_image)
-    print(len(landmarker_result.face_landmarks))
 
     if landmarker_result.face_landmarks:
         face_landmarks = landmarker_result.face_landmarks[0]
+
+        right_width = calculate_distance(
+            face_landmarks[362],
+            face_landmarks[263]
+        )
+
+        right_height = calculate_distance(
+            face_landmarks[386],
+            face_landmarks[374]
+        )
+
+        right_height_2 = calculate_distance(
+            face_landmarks[385],
+            face_landmarks[380]
+        )
+
+        right_ear = (right_height + right_height_2) / (2 * right_width)
+
+        print(right_width)
+        print(right_height)
+        print(right_height_2)
+        print(right_ear)
+
+        # calcula distancia na horizontal do olho esquerdo
+        left_width = calculate_distance(
+            face_landmarks[33],
+            face_landmarks[133]
+        )
+
+        print(left_width)
+
+        left_top = face_landmarks[159]
+        left_bottom = face_landmarks[145]
+
+        # calcula a distância na vertical do olho esquerdo
+        left_height = calculate_distance(left_top, left_bottom)
+
+        print(left_height)
+
+        left_top_2 = face_landmarks[158]
+        left_bottom_2 = face_landmarks[153]
+
+        # calcula a segunda distancia na vertical do olho esquerdo
+        left_height_2 = calculate_distance(left_top_2, left_bottom_2)
+
+        print(left_height_2)
+
+        # calcula o EAR do olho esquerdo
+        left_ear = (left_height + left_height_2) / (2 * left_width)
+
+        print(left_ear)
 
         # percorre somente os landmarks selecionados dos olhos
         for index in LEFT_EYE + RIGHT_EYE:
@@ -63,7 +121,6 @@ while True:
         (0, 255, 0),
         2
     )
-    
 
     cv2.imshow("Drowsiness Detection - V1", frame)
 
