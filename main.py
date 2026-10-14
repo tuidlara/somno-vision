@@ -60,6 +60,11 @@ while True:
 
         right_ear = (right_height + right_height_2) / (2 * right_width)
 
+        if right_ear > 0.19:
+            print("Right eye: Open")
+        else:
+            print("Right eye: Closed")
+
         # calcula distancia na horizontal do olho esquerdo
         left_width = calculate_distance(
             face_landmarks[33],
@@ -81,8 +86,13 @@ while True:
         # calcula o EAR do olho esquerdo
         left_ear = (left_height + left_height_2) / (2 * left_width)
 
+        if left_ear > 0.19:
+            print("Left eye: Open")
+        else:
+            print("Left eye: Closed")
+
         print(f"Left EAR: {left_ear:.3f} | Right EAR: {right_ear:.3f}")
-        
+
         # percorre somente os landmarks selecionados dos olhos
         for index in LEFT_EYE + RIGHT_EYE:
             landmark = face_landmarks[index]
