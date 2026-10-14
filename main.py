@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import math
+import time
 
 face_detector = mp.tasks.vision.FaceDetector.create_from_model_path(
     "models/blaze_face_short_range.tflite"
@@ -22,6 +23,8 @@ def calculate_distance(point1, point2):
         (point1.x - point2.x) ** 2 +
         (point1.y - point2.y) ** 2
     )
+
+eye_closed_start = None
 
 while True:
     success, frame = camera.read()
@@ -60,11 +63,6 @@ while True:
 
         right_ear = (right_height + right_height_2) / (2 * right_width)
 
-        if right_ear > 0.19:
-            print("Right eye: Open")
-        else:
-            print("Right eye: Closed")
-
         # calcula distancia na horizontal do olho esquerdo
         left_width = calculate_distance(
             face_landmarks[33],
@@ -86,13 +84,21 @@ while True:
         # calcula o EAR do olho esquerdo
         left_ear = (left_height + left_height_2) / (2 * left_width)
 
-        if left_ear > 0.19:
-            print("Left eye: Open")
+        if left_ear <= 0.19 and right_ear <= 0.19:
+            if eye_closed_start is None:
+                eye_closed_start = time.time()
+
+            print("Both eyes: Closed")
         else:
-            print("Left eye: Closed")
+            eye_closed_start = None
+            print("At least one eye: Open")
 
         print(f"Left EAR: {left_ear:.3f} | Right EAR: {right_ear:.3f}")
 
+        if eye_closed_start is not None:
+            closed_duration = time.time() - eye_closed_start
+            print(f"Eyes closed for: {closed_duration:.1f} seconds")
+            
         # percorre somente os landmarks selecionados dos olhos
         for index in LEFT_EYE + RIGHT_EYE:
             landmark = face_landmarks[index]
