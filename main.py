@@ -60,18 +60,11 @@ while True:
 
         right_ear = (right_height + right_height_2) / (2 * right_width)
 
-        print(right_width)
-        print(right_height)
-        print(right_height_2)
-        print(right_ear)
-
         # calcula distancia na horizontal do olho esquerdo
         left_width = calculate_distance(
             face_landmarks[33],
             face_landmarks[133]
         )
-
-        print(left_width)
 
         left_top = face_landmarks[159]
         left_bottom = face_landmarks[145]
@@ -79,21 +72,17 @@ while True:
         # calcula a distância na vertical do olho esquerdo
         left_height = calculate_distance(left_top, left_bottom)
 
-        print(left_height)
-
         left_top_2 = face_landmarks[158]
         left_bottom_2 = face_landmarks[153]
 
         # calcula a segunda distancia na vertical do olho esquerdo
         left_height_2 = calculate_distance(left_top_2, left_bottom_2)
 
-        print(left_height_2)
-
         # calcula o EAR do olho esquerdo
         left_ear = (left_height + left_height_2) / (2 * left_width)
 
-        print(left_ear)
-
+        print(f"Left EAR: {left_ear:.3f} | Right EAR: {right_ear:.3f}")
+        
         # percorre somente os landmarks selecionados dos olhos
         for index in LEFT_EYE + RIGHT_EYE:
             landmark = face_landmarks[index]
