@@ -147,7 +147,9 @@ while True:
 
     cv2.imshow("Drowsiness Detection - V1", frame)
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
+    key = cv2.waitKey(1) & 0xFF
+
+    if key == ord("q") or key == ord("Q"):
         break
 
 camera.release()
