@@ -26,6 +26,8 @@ def calculate_distance(point1, point2):
 
 eye_closed_start = None
 
+alert_triggered = False
+
 while True:
     success, frame = camera.read()
 
@@ -91,6 +93,7 @@ while True:
             print("Both eyes: Closed")
         else:
             eye_closed_start = None
+            alert_triggered = False
             print("At least one eye: Open")
 
         print(f"Left EAR: {left_ear:.3f} | Right EAR: {right_ear:.3f}")
@@ -98,6 +101,10 @@ while True:
         if eye_closed_start is not None:
             closed_duration = time.time() - eye_closed_start
             print(f"Eyes closed for: {closed_duration:.1f} seconds")
+
+            if closed_duration >= 5 and not alert_triggered:
+                print("WARNING: Possible drowsiness detected!")
+                alert_triggered = True
             
         # percorre somente os landmarks selecionados dos olhos
         for index in LEFT_EYE + RIGHT_EYE:
@@ -126,6 +133,17 @@ while True:
         (0, 255, 0),
         2
     )
+
+    if alert_triggered:
+        cv2.putText(
+            frame,
+            "POSSIBLE DROWSINESS DETECTED!",
+            (30, 50),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (0, 0, 255),
+            2
+        )
 
     cv2.imshow("Drowsiness Detection - V1", frame)
 
