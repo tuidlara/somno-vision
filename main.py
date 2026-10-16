@@ -35,6 +35,9 @@ while True:
         print("Could not access the camera.")
         break
 
+    left_ear = None
+    right_ear = None
+
     # transforma para rgb
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -144,6 +147,27 @@ while True:
             (0, 0, 255),
             2
         )
+
+    if left_ear is not None and right_ear is not None:
+        cv2.putText(
+            frame,
+            f"EAR  L: {left_ear:.3f} | R: {right_ear:.3f}",
+            (20, 30),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0),
+            2
+        )
+    else:
+        cv2.putText(
+            frame,
+            "Face not detected",
+            (20, 30),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0),
+            2
+        ) 
 
     cv2.imshow("Drowsiness Detection - V1", frame)
 
