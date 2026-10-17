@@ -37,6 +37,7 @@ while True:
 
     left_ear = None
     right_ear = None
+    eye_status = "FACE NOT DETECTED"
 
     # transforma para rgb
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -90,11 +91,15 @@ while True:
         left_ear = (left_height + left_height_2) / (2 * left_width)
 
         if left_ear <= 0.19 and right_ear <= 0.19:
+            eye_status = "EYES: CLOSED"
+
             if eye_closed_start is None:
                 eye_closed_start = time.time()
 
             print("Both eyes: Closed")
         else:
+            eye_status = "EYES: OPEN"
+
             eye_closed_start = None
             alert_triggered = False
             print("At least one eye: Open")
@@ -141,7 +146,7 @@ while True:
         cv2.putText(
             frame,
             "POSSIBLE DROWSINESS DETECTED!",
-            (30, 50),
+            (20, 100),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.8,
             (0, 0, 255),
@@ -168,6 +173,16 @@ while True:
             (0, 255, 0),
             2
         ) 
+
+    cv2.putText(
+        frame,
+        eye_status,
+        (20, 60),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6,
+        (0, 255, 0),
+        2
+    )
 
     cv2.imshow("Drowsiness Detection - V1", frame)
 
