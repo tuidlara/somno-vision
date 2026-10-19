@@ -25,7 +25,7 @@ def calculate_distance(point1, point2):
     )
 
 eye_closed_start = None
-
+eye_open_start = None
 alert_triggered = False
 
 while True:
@@ -92,16 +92,25 @@ while True:
 
         if left_ear <= 0.19 and right_ear <= 0.19:
             eye_status = "EYES: CLOSED"
+            eye_open_start = None
 
             if eye_closed_start is None:
                 eye_closed_start = time.time()
 
             print("Both eyes: Closed")
+
         else:
             eye_status = "EYES: OPEN"
 
-            eye_closed_start = None
-            alert_triggered = False
+            if eye_open_start is None:
+                eye_open_start = time.time()
+
+            open_duration = time.time() - eye_open_start
+
+            if open_duration >= 0.3:
+                eye_closed_start = None
+                alert_triggered = False
+
             print("At least one eye: Open")
 
         print(f"Left EAR: {left_ear:.3f} | Right EAR: {right_ear:.3f}")
@@ -123,6 +132,10 @@ while True:
             y = int(landmark.y * frame.shape[0])
 
             cv2.circle(frame, (x, y), 3, (0, 255, 0), -1)
+
+    else:
+        eye_closed_start = None
+        eye_open_start = None
 
     detection_result = face_detector.detect(mp_image)
 
