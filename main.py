@@ -163,26 +163,27 @@ while True:
             (0, 255, 0),
             2
         )
+
+    if left_ear is not None and right_ear is not None:
+        cv2.putText(
+            frame,
+            eye_status,
+            (20, 60),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0),
+            2
+        )
     else:
         cv2.putText(
             frame,
-            "Face not detected",
+            eye_status,
             (20, 30),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,
             (0, 255, 0),
             2
-        ) 
-
-    cv2.putText(
-        frame,
-        eye_status,
-        (20, 60),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.6,
-        (0, 255, 0),
-        2
-    )
+        )
 
     cv2.imshow("Drowsiness Detection - V1", frame)
 
