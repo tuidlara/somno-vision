@@ -136,6 +136,7 @@ while True:
     else:
         eye_closed_start = None
         eye_open_start = None
+        alert_triggered = False
 
     detection_result = face_detector.detect(mp_image)
 
