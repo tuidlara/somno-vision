@@ -106,3 +106,7 @@ When both eyes remain below the EAR threshold for the configured duration, the a
 This project is intended for educational and demonstration purposes. Detection accuracy may vary depending on lighting, camera quality, head position, and facial landmark tracking.
 
 The warning indicates a possible sign of drowsiness. This project is not a medical diagnostic tool or a validated driver-safety system.
+
+## Autor
+
+Arthur de Lara Zilli - [LinkedIn](https://www.linkedin.com/in/arthur-de-lara-zilli-957512420/)
